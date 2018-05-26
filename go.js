@@ -24,18 +24,24 @@ TestTable = sequelize.define('date_test',
     }
 );
 
+// midnight UTC on Halloween 🎃
 var date = new Date(Date.UTC(2000, 9, 31));
 
-// inserts 2000-10-30
+// converts to local time resulting in 2000-10-30
 TestTable.create({ someDate: date })
     .then(function() {
-        // also inserts 2000-10-30
+        // also apparently converts to local time resulting in 2000-10-30
         return TestTable.create({ someDate: date.toUTCString() });
     })
     .then(function() {
-        // this works but seems hacky
+        // convert to string, definitely works but seems unnecessary
         var strDate = date.getUTCFullYear() + '-' + pad2(date.getUTCMonth() + 1) + '-' + pad2(date.getUTCDate());
         return TestTable.create({ someDate: strDate });
+    })
+    .then(function() {
+        // cerate a new local Date, also works but seems hacky
+        var newDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+        return TestTable.create({ someDate: newDate });
     })
     .then(function() {
         process.exit(0);
@@ -49,4 +55,3 @@ function pad2(n) {
 
     return n;
 }
-
