@@ -1,0 +1,4 @@
+module.exports = {
+    'config': './config.js',
+    'migrations-path': './migrations'
+};
